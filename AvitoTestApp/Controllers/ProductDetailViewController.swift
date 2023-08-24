@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ProductDetailViewController.swift
 //  AvitoTestApp
 //
 //  Created by Ольга Шовгенева on 24.08.2023.
@@ -7,13 +7,11 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+final class ProductDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+
     }
 
-
 }
-
