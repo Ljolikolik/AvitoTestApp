@@ -10,7 +10,7 @@ import Foundation
 /// Represents unique API endpoint
 @frozen enum Endpoint: String, CaseIterable, Hashable {
     /// Endpoint to get product info
-    case mainPage = "main-page"
+    case mainPage = "main-page.json"
     /// Endpoint to get detail product info
     case details
 }

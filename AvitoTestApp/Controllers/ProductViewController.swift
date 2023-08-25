@@ -16,6 +16,17 @@ final class ProductViewController: UIViewController {
         title = "Товары"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
+        
+        let request = Request(
+            endpoint: .details,
+            pathComponents: ["1.json"]
+        )
+        print(request.url)
+        
+        Service.shared.execute(request, expecting: Product.self) { result in
+            
+            }
+        }
     }
     
 
