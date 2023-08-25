@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// Controller to show Detail Products
 final class ProductDetailViewController: UIViewController {
 
     override func viewDidLoad() {

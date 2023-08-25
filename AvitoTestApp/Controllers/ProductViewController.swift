@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// Controller to show Products
 final class ProductViewController: UIViewController {
 
     override func viewDidLoad() {
