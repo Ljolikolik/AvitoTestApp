@@ -9,6 +9,8 @@ import UIKit
 
 /// Controller to show Products
 final class ProductViewController: UIViewController {
+    
+    private let productListView = ProductListView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,18 +18,20 @@ final class ProductViewController: UIViewController {
         title = "Товары"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-        
-        let request = Request(
-            endpoint: .details,
-            pathComponents: ["1.json"]
-        )
-        print(request.url)
-        
-        Service.shared.execute(request, expecting: Product.self) { result in
-            
-            }
-        }
+        view.addSubview(productListView)
+        setupView()
     }
+    
+    private func setupView() {
+        view.addSubview(productListView)
+        NSLayoutConstraint.activate([
+            productListView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            productListView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            productListView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            productListView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+}
     
 
     /*
@@ -39,5 +43,3 @@ final class ProductViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
-}

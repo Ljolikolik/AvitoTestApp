@@ -19,7 +19,7 @@ final class Request {
     private let endpoint: Endpoint
     
     /// Path components for API,  if any
-    private let pathComponents: Set<String>
+    private let pathComponents: [String]
     
     /// Constructed urlfor the api request in string format
     private var urlString: String {
@@ -52,9 +52,13 @@ final class Request {
     ///   - pathComponents: collection of Path components
     public init(
         endpoint: Endpoint,
-        pathComponents: Set<String> = []
+        pathComponents: [String] = []
     ) {
         self.endpoint = endpoint
         self.pathComponents = pathComponents
     }
+}
+
+extension Request {
+    static let listProductsRequests = Request(endpoint: .mainPage)
 }
