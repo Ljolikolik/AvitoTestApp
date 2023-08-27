@@ -29,7 +29,7 @@ final class ProductListView: UIView {
         collectionView.alpha = 0
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.register(ProductCollectionViewCell.self,
-                                forCellWithReuseIdentifier: "cell")
+                                forCellWithReuseIdentifier: ProductCollectionViewCell.cellIdentifier)
         return collectionView
     }()
     

@@ -26,8 +26,16 @@ extension ProductListViewViewModel: UICollectionViewDataSource, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        cell.backgroundColor = .systemMint
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProductCollectionViewCell.cellIdentifier, for: indexPath
+        ) as? ProductCollectionViewCell else {
+            fatalError("Unsupported cell ")
+        }
+        let viewModel = ProductCollectionViewCellViewModel(productTitle: "Айфон",
+                                                           productPrice: "111111",
+                                                           productLocation: "jsdnfjsdnf",
+                                                           prductDate: "sfdsfs",
+                                                           productImageUrl: URL(string: "https://www.avito.st/s/interns-ios/images/2.png"))
+        cell.configure(with: viewModel)
         return cell
     }
     
@@ -35,6 +43,6 @@ extension ProductListViewViewModel: UICollectionViewDataSource, UICollectionView
         let bounds = UIScreen.main.bounds
         let width = (bounds.width - 30) / 2
         return CGSize(width: width,
-                      height: width * 1.5)
+                      height: width * 1.8)
     }
 }

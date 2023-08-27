@@ -83,7 +83,6 @@
 				0F0C2B3C2A97A129003B7418 /* APIClient */,
 				0F0C2B1E2A979902003B7418 /* ViewModels */,
 				0F0C2B1F2A97991A003B7418 /* Views */,
-				0F0C2B202A97993D003B7418 /* Models */,
 				0F0C2B212A979952003B7418 /* Controllers */,
 				0F0C2B132A9790CD003B7418 /* Info.plist */,
 			);
@@ -123,6 +122,7 @@
 			children = (
 				0F0C2B342A979CED003B7418 /* ProductListView.swift */,
 				0F0C2B362A979D29003B7418 /* ProductCollectionViewCell.swift */,
+				0F0C2B202A97993D003B7418 /* Models */,
 			);
 			path = Views;
 			sourceTree = "<group>";
