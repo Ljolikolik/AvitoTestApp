@@ -8,7 +8,7 @@
 import UIKit
 
 /// Controller to show Products
-final class ProductViewController: UIViewController {
+final class ProductViewController: UIViewController, ProductListViewDelegate {
     
     private let productListView = ProductListView()
 
@@ -23,6 +23,7 @@ final class ProductViewController: UIViewController {
     }
     
     private func setupView() {
+        productListView.delegate = self
         view.addSubview(productListView)
         NSLayoutConstraint.activate([
             productListView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -31,15 +32,15 @@ final class ProductViewController: UIViewController {
             productListView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
-}
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    // MARK: - ProductListViewDelegate
+    
+    func productListView(_ productListView: ProductListView, didSelectProduct product: Product) {
+        // Open detail controller for that product
+        let viewModel = ProductDetailViewViewModel(product: product)
+        let detailVC = ProductDetailViewController(viewModel: viewModel)
+        detailVC.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(detailVC, animated: true)
     }
-    */
+}
+

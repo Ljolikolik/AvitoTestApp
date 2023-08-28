@@ -14,7 +14,7 @@ final class ProductCollectionViewCellViewModel {
     public let productLocation: String
     public let prductDate: String
     private let productImageUrl: URL?
-    
+
     // MARK: - Init
     
     init(
@@ -36,16 +36,8 @@ final class ProductCollectionViewCellViewModel {
             completion(.failure(URLError(.badURL)))
             return
         }
-        let request = URLRequest(url: url)
-        let task = URLSession.shared.dataTask(with: request) { data, _, error in
-            guard let data, error == nil else {
-                completion(.failure(error ?? URLError(.badServerResponse)))
-                return
-            }
-            
-            completion(.success(data))
-        }
-        task.resume()
+//        let request = URLRequest(url: url)
+        ImageLoader.shared.downloadImage(url, completion: completion)
     }
 }
 

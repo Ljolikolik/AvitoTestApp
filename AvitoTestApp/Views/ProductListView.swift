@@ -7,8 +7,17 @@
 
 import UIKit
 
+protocol ProductListViewDelegate: AnyObject {
+    func productListView(
+        _ productListView: ProductListView,
+        didSelectProduct product: Product
+    )
+}
+
 /// View that handles showing list of products, loader, etc.
 final class ProductListView: UIView {
+    
+    public weak var delegate: ProductListViewDelegate?
     
     private let viewModel = ProductListViewViewModel()
     
@@ -41,6 +50,7 @@ final class ProductListView: UIView {
         addSubviews(spinner, collectionView)
         addConstraints()
         spinner.startAnimating()
+        viewModel.delegate = self
         viewModel.fetchProducts()
         setupCollectionView()
     }
@@ -66,13 +76,20 @@ final class ProductListView: UIView {
     private func setupCollectionView() {
         collectionView.dataSource = viewModel
         collectionView.delegate = viewModel
-        DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: {
-            self.spinner.stopAnimating()
-            
-            self.collectionView.isHidden = false
-            UIView.animate(withDuration: 0.4) {
-                self.collectionView.alpha = 1
-            }
-        })
+    }
+}
+
+extension ProductListView: ProductListViewViewModelDelegate {
+    func didSelectProduct(_ product: Product) {
+        delegate?.productListView(self, didSelectProduct: product)
+    }
+    
+    func didloadProducts() {
+        spinner.stopAnimating()
+        collectionView.isHidden = false
+        collectionView.reloadData() // Initial fetch
+        UIView.animate(withDuration: 0.4) {
+            self.collectionView.alpha = 1
+        }
     }
 }
