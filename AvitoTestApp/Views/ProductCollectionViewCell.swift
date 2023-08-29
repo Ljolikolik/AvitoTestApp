@@ -106,18 +106,18 @@ final class ProductCollectionViewCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        imageView.image = nil
         titleLabel.text = nil
         priceLabel.text = nil
         locationLabel.text = nil
         dateLabel.text = nil
+        imageView.image = nil
     }
     
     public func configure(with viewModel: ProductCollectionViewCellViewModel) {
         titleLabel.text = viewModel.productTitle
         priceLabel.text = viewModel.productPrice
         locationLabel.text = viewModel.productLocation
-        dateLabel.text = viewModel.prductDate
+        dateLabel.text = viewModel.productDate
         viewModel.fetchImage { [weak self] result in
             switch result {
             case .success(let data):

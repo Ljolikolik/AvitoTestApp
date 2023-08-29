@@ -12,7 +12,7 @@ final class ProductCollectionViewCellViewModel {
     public let productTitle: String
     public let productPrice: String
     public let productLocation: String
-    public let prductDate: String
+    public let productDate: String
     private let productImageUrl: URL?
 
     // MARK: - Init
@@ -21,13 +21,13 @@ final class ProductCollectionViewCellViewModel {
         productTitle: String,
         productPrice: String,
         productLocation: String,
-        prductDate: String,
+        productDate: String,
         productImageUrl: URL?
     ) {
         self.productTitle = productTitle
         self.productPrice = productPrice
         self.productLocation = productLocation
-        self.prductDate = prductDate
+        self.productDate = productDate
         self.productImageUrl = productImageUrl
     }
     
@@ -36,7 +36,6 @@ final class ProductCollectionViewCellViewModel {
             completion(.failure(URLError(.badURL)))
             return
         }
-//        let request = URLRequest(url: url)
         ImageLoader.shared.downloadImage(url, completion: completion)
     }
 }

@@ -24,8 +24,8 @@ final class ProductListViewViewModel: NSObject {
                     productTitle: product.title,
                     productPrice: product.price,
                     productLocation: product.location,
-                    prductDate: product.created_date,
-                    productImageUrl: URL(string: product.image_url)
+                    productDate: product.createdDate,
+                    productImageUrl: URL(string: product.imageURL)
                 )
                 cellViewModels.append(viewModel)
             }
@@ -42,10 +42,10 @@ final class ProductListViewViewModel: NSObject {
             switch result {
             case .success(let responseModel):
                 let results = responseModel.advertisements
+                self?.products = results
                 DispatchQueue.main.async {
                     self?.delegate?.didloadProducts()
                 }
-                self?.products = results
             case .failure(let error):
                 print(String(describing: error))
             }

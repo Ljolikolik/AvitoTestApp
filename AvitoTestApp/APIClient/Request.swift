@@ -16,7 +16,7 @@ final class Request {
     }
     
     /// Desired andpoint
-    private let endpoint: Endpoint
+    let endpoint: Endpoint
     
     /// Path components for API,  if any
     private let pathComponents: [String]
@@ -61,4 +61,5 @@ final class Request {
 
 extension Request {
     static let listProductsRequests = Request(endpoint: .mainPage)
+
 }
