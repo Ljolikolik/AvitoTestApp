@@ -13,7 +13,7 @@ final class ProductCollectionViewCellViewModel {
     public let productPrice: String
     public let productLocation: String
     public let productDate: String
-    private let productImageUrl: URL?
+    public let productImageUrl: URL?
 
     // MARK: - Init
     
@@ -31,12 +31,12 @@ final class ProductCollectionViewCellViewModel {
         self.productImageUrl = productImageUrl
     }
     
-    public func fetchImage(completion: @escaping (Result<Data, Error>) -> Void) {
-        guard let url = productImageUrl else {
-            completion(.failure(URLError(.badURL)))
-            return
-        }
-        ImageLoader.shared.downloadImage(url, completion: completion)
-    }
+//    public func fetchImage(completion: @escaping (Result<Data, Error>) -> Void) {
+//        guard let url = productImageUrl else {
+//            completion(.failure(URLError(.badURL)))
+//            return
+//        }
+//        ImageLoader.shared.downloadImage(url, completion: completion)
+//    }
 }
 

@@ -73,6 +73,7 @@ extension ProductListViewViewModel: UICollectionViewDataSource, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
         let bounds = UIScreen.main.bounds
         let width = (bounds.width - 30) / 2
         return CGSize(

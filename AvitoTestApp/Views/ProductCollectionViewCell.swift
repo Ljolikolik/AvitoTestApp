@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 /// Single cell for a product
 final class ProductCollectionViewCell: UICollectionViewCell {
@@ -118,17 +119,9 @@ final class ProductCollectionViewCell: UICollectionViewCell {
         priceLabel.text = viewModel.productPrice
         locationLabel.text = viewModel.productLocation
         dateLabel.text = viewModel.productDate
-        viewModel.fetchImage { [weak self] result in
-            switch result {
-            case .success(let data):
-                DispatchQueue.main.async {
-                    let image = UIImage(data: data)
-                    self?.imageView.image = image
-                }
-            case .failure(let error):
-                print(String(describing: error))
-                break
-            }
-        }
+        imageView.kf.setImage(
+            with: viewModel.productImageUrl
+            //placeholder: placeholderImage,
+        )
     }
 }

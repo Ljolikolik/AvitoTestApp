@@ -87,7 +87,7 @@ extension ProductListView: ProductListViewViewModelDelegate {
     func didloadProducts() {
         spinner.stopAnimating()
         collectionView.isHidden = false
-        collectionView.reloadData() // Initial fetch
+//        collectionView.reloadData() // Initial fetch
         UIView.animate(withDuration: 0.4) {
             self.collectionView.alpha = 1
         }
