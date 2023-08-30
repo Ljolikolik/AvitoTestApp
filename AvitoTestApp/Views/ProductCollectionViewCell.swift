@@ -28,6 +28,8 @@ final class ProductCollectionViewCell: UICollectionViewCell {
         return imageView
     } ()
     
+    private let placeholderImage = UIImage(named: "placeholder")
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .label
@@ -120,8 +122,8 @@ final class ProductCollectionViewCell: UICollectionViewCell {
         locationLabel.text = viewModel.productLocation
         dateLabel.text = viewModel.productDate
         imageView.kf.setImage(
-            with: viewModel.productImageUrl
-            //placeholder: placeholderImage,
+            with: viewModel.productImageUrl,
+            placeholder: placeholderImage
         )
     }
 }

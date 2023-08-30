@@ -9,7 +9,7 @@ import UIKit
 
 /// Controller to show Products
 final class ProductViewController: UIViewController, ProductListViewDelegate {
-    
+
     private let productListView = ProductListView()
 
     override func viewDidLoad() {

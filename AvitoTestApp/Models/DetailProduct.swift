@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Detail: Codable {
+struct DetailProduct: Codable {
     let id, title, price, location: String
     let imageURL: String
     let createdDate, description, email, phoneNumber: String

@@ -10,6 +10,7 @@ import UIKit
 protocol ProductListViewViewModelDelegate: AnyObject {
     func didloadProducts()
     func didSelectProduct(_ product: Product)
+    func errorHasBeenOccured(message: String)
 }
 
 /// View Model to handle product list view logic
@@ -47,6 +48,9 @@ final class ProductListViewViewModel: NSObject {
                     self?.delegate?.didloadProducts()
                 }
             case .failure(let error):
+                DispatchQueue.main.async {
+                    self?.delegate?.errorHasBeenOccured(message: "Unknown Error!")
+                }
                 print(String(describing: error))
             }
         }
