@@ -25,7 +25,8 @@
 - Для отображения списка используется UICollectionView с отображением в 2 столбца.
 - Для запроса данных используется URLSession.
 - Для загрузки изображений используется kingfisher
-
+- Архитектура MVVM
+  
 ## Отображение контента из JSON файла
 
 ![Simulator Screen Recording - iPhone 14 Pro - 2023-08-31 at 22 15 43](https://github.com/Ljolikolik/AvitoTestApp/assets/124365634/9846e6cf-08c4-4b3f-9a1c-5fced7c02d65)
