@@ -33,13 +33,12 @@ final class ProductListView: UIView {
     private let retryButton: RetryButton = {
         let retryButton = RetryButton()
         retryButton.translatesAutoresizingMaskIntoConstraints = false
-        retryButton.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         return retryButton
     }()
     
     private let snackbarView: SnackbarView = {
         let snackbarView = SnackbarView()
-        snackbarView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        snackbarView.backgroundColor = UIColor(named: "errorColor")
         snackbarView.translatesAutoresizingMaskIntoConstraints = false
         return snackbarView
     }()

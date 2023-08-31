@@ -9,13 +9,17 @@ import UIKit
 
 class SnackbarView: UIView {
     
-    private let label = UILabel()
+    private let label: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    } ()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        label.textColor = .label
-        label.translatesAutoresizingMaskIntoConstraints = false
+        layer.cornerRadius = 12
+        layer.masksToBounds = true
         addSubview(label)
         setLabelConstraints()
     }
@@ -26,8 +30,8 @@ class SnackbarView: UIView {
     
     func setLabelConstraints() {
         NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor),
             label.topAnchor.constraint(equalTo: topAnchor),
             label.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
@@ -41,8 +45,8 @@ class SnackbarView: UIView {
         alpha = 1
         
         NSLayoutConstraint.activate([
-            leadingAnchor.constraint(equalTo: root.leadingAnchor),
-            trailingAnchor.constraint(equalTo: root.trailingAnchor),
+            leadingAnchor.constraint(equalTo: root.leadingAnchor,constant: 20),
+            trailingAnchor.constraint(equalTo: root.trailingAnchor, constant: -20),
             bottomAnchor.constraint(equalTo: root.bottomAnchor),
             heightAnchor.constraint(equalToConstant: 44),
         ])

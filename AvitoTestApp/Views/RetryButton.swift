@@ -14,6 +14,8 @@ class RetryButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setTitle("Повторить", for: .normal)
+        setTitleColor(.systemBlue, for: .normal)
+        isHidden = true
     }
     
     required init?(coder: NSCoder) {

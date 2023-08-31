@@ -14,7 +14,6 @@ final class ProductDetailView: UIView {
     
     private let placeholderImage = UIImage(named: "placeholder")
     var viewModel: ProductDetailViewViewModel? = nil
-
     
     private let spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
@@ -23,21 +22,27 @@ final class ProductDetailView: UIView {
         return spinner
     }()
     
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsVerticalScrollIndicator = true
+        scrollView.alwaysBounceVertical = true
+        scrollView.backgroundColor = .clear
+        return scrollView
+    }()
+    
+    private let contentView: UIView = {
+        let contentView = UIView()
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        return contentView
+    }()
+    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     } ()
-    
-    let stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .fill
-        stackView.distribution = .fillProportionally
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
     
     let buttonStackView: UIStackView = {
         let stackView = UIStackView()
@@ -86,7 +91,6 @@ final class ProductDetailView: UIView {
         button.layer.cornerRadius = 12
         button.backgroundColor = UIColor(named: "callButtonColor")
         button.setTitle("Позвонить", for: .normal)
-        button.addTarget(ProductDetailView.self, action: #selector(callButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -97,6 +101,40 @@ final class ProductDetailView: UIView {
         button.setTitle("Написать", for: .normal)
         return button
     }()
+    
+    private let contactsTitleLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .label
+        label.text = "Контакты"
+        label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        label.alpha = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    } ()
+    
+    private let phoneNumberLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .label
+        label.font = .systemFont(ofSize: 18, weight: .regular)
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        label.alpha = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    } ()
+    
+    private let emailLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .label
+        label.font = .systemFont(ofSize: 18, weight: .regular)
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        label.alpha = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    } ()
     
     private let descriptionTitleLabel: UILabel = {
         let label = UILabel()
@@ -124,13 +162,12 @@ final class ProductDetailView: UIView {
     private let retryButton: RetryButton = {
         let retryButton = RetryButton()
         retryButton.translatesAutoresizingMaskIntoConstraints = false
-        retryButton.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         return retryButton
     }()
     
     private let snackbarView: SnackbarView = {
         let snackbarView = SnackbarView()
-        snackbarView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        snackbarView.backgroundColor = UIColor(named: "errorColor")
         snackbarView.translatesAutoresizingMaskIntoConstraints = false
         return snackbarView
     }()
@@ -141,17 +178,13 @@ final class ProductDetailView: UIView {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = .systemBackground
-        stackView.addArrangedSubview(priceLabel)
-        stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(addressLabel)
         buttonStackView.addArrangedSubview(callButton)
         buttonStackView.addArrangedSubview(sendMassgeButton)
-        stackView.addArrangedSubview(buttonStackView)
-        stackView.addArrangedSubview(descriptionTitleLabel)
-        stackView.addArrangedSubview(descriptionLabel)
-        addSubviews(spinner, imageView, stackView, retryButton)
-        spinner.startAnimating()
+        addSubviews(scrollView)
         retryButton.setRetryAction(retryAction: retry)
+        contentView.addSubviews(spinner, imageView, titleLabel, priceLabel, addressLabel, buttonStackView, contactsTitleLabel, emailLabel, phoneNumberLabel, descriptionTitleLabel, descriptionLabel, retryButton)
+        scrollView.addSubview(contentView)
+        spinner.startAnimating()
         addConstrains()
     }
     
@@ -171,42 +204,68 @@ final class ProductDetailView: UIView {
     
     private func addConstrains() {
         NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
+            
             spinner.widthAnchor.constraint(equalToConstant: 100),
             spinner.heightAnchor.constraint(equalToConstant: 100),
             spinner.centerXAnchor.constraint(equalTo: centerXAnchor),
             spinner.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 200),
-            
-            imageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            imageView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             imageView.heightAnchor.constraint(equalToConstant: 300),
-            
-            stackView.topAnchor.constraint(equalTo: imageView.bottomAnchor),
-            stackView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 10),
-            stackView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -10),
-            stackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            
-            //todo сделать красиво
-            descriptionLabel.widthAnchor.constraint(equalToConstant: 100),
-            descriptionLabel.heightAnchor.constraint(equalToConstant: 100),
-            addressLabel.widthAnchor.constraint(equalToConstant: 100),
-            addressLabel.heightAnchor.constraint(equalToConstant: 100),
-            
-            retryButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            retryButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            
+
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+
+            priceLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
+            priceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            priceLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+
+            addressLabel.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 10),
+            addressLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            addressLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+
+            buttonStackView.topAnchor.constraint(equalTo: addressLabel.bottomAnchor, constant: 20),
+            buttonStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            buttonStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             buttonStackView.heightAnchor.constraint(equalToConstant: 50),
+
+            contactsTitleLabel.topAnchor.constraint(equalTo: buttonStackView.bottomAnchor, constant: 20),
+            contactsTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            contactsTitleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+
+            phoneNumberLabel.topAnchor.constraint(equalTo: contactsTitleLabel.bottomAnchor, constant: 20),
+            phoneNumberLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            phoneNumberLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+
+            emailLabel.topAnchor.constraint(equalTo: phoneNumberLabel.bottomAnchor, constant: 10),
+            emailLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            emailLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+
+            descriptionTitleLabel.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 20),
+            descriptionTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            descriptionTitleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+
+            descriptionLabel.topAnchor.constraint(equalTo: descriptionTitleLabel.bottomAnchor, constant: 20),
+            descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+
+            retryButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 150),
+            retryButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
         ])
-    }
-    
-    @objc func callButtonTapped() {
-        guard let details = viewModel?.details else {
-            return
-        }
-        let phoneNumber = details.phoneNumber
-        
-        guard let number = URL(string: "tel://" + phoneNumber) else { return }
-        UIApplication.shared.open(number)
     }
     
     public func configure(with viewModel: ProductDetailViewViewModel) {
@@ -230,14 +289,18 @@ final class ProductDetailView: UIView {
 extension ProductDetailView: ProductDetailsViewViewModelDelegate {
     
     func didLoadDetails(details: DetailProduct) {
-        //todo обработать случай если с бека придет nil в одном или в обоих адресах
         let finalAddress = "\(details.location), \(details.address)"
         addressLabel.text = finalAddress
         descriptionLabel.text = details.description
+        phoneNumberLabel.text = "Номер телефона: \(details.phoneNumber)"
+        emailLabel.text = "Email: \(details.email)"
         descriptionLabel.alpha = 1
         buttonStackView.alpha = 1
         addressLabel.alpha = 1
         descriptionTitleLabel.alpha = 1
+        contactsTitleLabel.alpha = 1
+        phoneNumberLabel.alpha = 1
+        emailLabel.alpha = 1
         spinner.stopAnimating()
         retryButton.hide()
     }

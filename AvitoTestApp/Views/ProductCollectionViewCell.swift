@@ -75,11 +75,7 @@ final class ProductCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         layer.masksToBounds = true
-        stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(priceLabel)
-        stackView.addArrangedSubview(locationLabel)
-        stackView.addArrangedSubview(dateLabel)
-        contentView.addSubviews(imageView, stackView)
+        contentView.addSubviews(imageView, titleLabel, priceLabel, locationLabel, dateLabel)
         addConstraints()
     }
     
@@ -94,16 +90,15 @@ final class ProductCollectionViewCell: UICollectionViewCell {
             imageView.heightAnchor.constraint(equalTo: contentView.widthAnchor),
             imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor),
             
-            stackView.topAnchor.constraint(equalTo: imageView.bottomAnchor),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 5),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            titleLabel.heightAnchor.constraint(equalTo: stackView.heightAnchor, multiplier: 0.4),
-            priceLabel.heightAnchor.constraint(equalTo: stackView.heightAnchor, multiplier: 0.2),
-            locationLabel.heightAnchor.constraint(equalTo: stackView.heightAnchor, multiplier: 0.2),
-            dateLabel.heightAnchor.constraint(equalTo: stackView.heightAnchor, multiplier: 0.2)
-
+            priceLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
+            
+            locationLabel.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 5),
+            
+            dateLabel.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: 5)
         ])
     }
     
@@ -118,12 +113,14 @@ final class ProductCollectionViewCell: UICollectionViewCell {
     
     public func configure(with viewModel: ProductCollectionViewCellViewModel) {
         titleLabel.text = viewModel.productTitle
-        priceLabel.text = viewModel.productPrice
+        priceLabel.text = formatPrice(viewModel.productPrice)
         locationLabel.text = viewModel.productLocation
-        dateLabel.text = viewModel.productDate
+        dateLabel.text = formatDate(viewModel.productDate)
         imageView.kf.setImage(
             with: viewModel.productImageUrl,
             placeholder: placeholderImage
         )
     }
+    
+    
 }

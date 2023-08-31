@@ -35,6 +35,13 @@ final class ProductDetailViewController: UIViewController {
         addConstraints()
         viewModel.fetchProductData()
         detailView.configure(with: viewModel)
+        let backButton = UIBarButtonItem(image: UIImage(systemName: "arrow.backward"), style: .plain, target: self, action: #selector(backButtonTapped))
+        backButton.tintColor = .label
+        navigationItem.leftBarButtonItem = backButton
+    }
+    
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
     
     private func addConstraints() {

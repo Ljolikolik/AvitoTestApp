@@ -36,7 +36,7 @@ final class ProductDetailViewViewModel {
     }
     
     public var price: String {
-        product.price
+        formatPrice(product.price)
     }
     
     public func fetchProductData() {
