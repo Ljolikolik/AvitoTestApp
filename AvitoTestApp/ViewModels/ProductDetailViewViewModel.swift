@@ -9,6 +9,7 @@ import UIKit
 
 protocol ProductDetailsViewViewModelDelegate : AnyObject {
     func didLoadDetails(details: DetailProduct)
+    func errorHasBeenOccured(message: String)
 }
 
 final class ProductDetailViewViewModel {
@@ -47,8 +48,10 @@ final class ProductDetailViewViewModel {
                 DispatchQueue.main.async {
                     self.delegate?.didLoadDetails(details: responseModel)
                 }
-                //print(String(describing: success))
             case .failure(let failure):
+                DispatchQueue.main.async {
+                    self.delegate?.errorHasBeenOccured(message: "Произошла ошибка запроса.")
+                }
                 print(String(describing: failure))
             }
         }

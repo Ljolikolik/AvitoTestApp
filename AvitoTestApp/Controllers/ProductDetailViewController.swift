@@ -11,12 +11,14 @@ import UIKit
 final class ProductDetailViewController: UIViewController {
     private let viewModel: ProductDetailViewViewModel
     
-    private let detailView = ProductDetailView()
+    private let detailView: ProductDetailView
      
     // MARK: - Init
     
     init(viewModel: ProductDetailViewViewModel) {
         self.viewModel = viewModel
+        self.detailView = ProductDetailView()
+        self.detailView.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     

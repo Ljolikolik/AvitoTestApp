@@ -13,8 +13,8 @@ import Kingfisher
 final class ProductDetailView: UIView {
     
     private let placeholderImage = UIImage(named: "placeholder")
-    //todo это должно быть тут? О_О
     var viewModel: ProductDetailViewViewModel? = nil
+
     
     private let spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
@@ -86,7 +86,7 @@ final class ProductDetailView: UIView {
         button.layer.cornerRadius = 12
         button.backgroundColor = UIColor(named: "callButtonColor")
         button.setTitle("Позвонить", for: .normal)
-        button.addTarget(self, action: #selector(callButtonTapped), for: .touchUpInside)
+        button.addTarget(ProductDetailView.self, action: #selector(callButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -120,6 +120,21 @@ final class ProductDetailView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     } ()
+    
+    private let retryButton: RetryButton = {
+        let retryButton = RetryButton()
+        retryButton.translatesAutoresizingMaskIntoConstraints = false
+        retryButton.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        return retryButton
+    }()
+    
+    private let snackbarView: SnackbarView = {
+        let snackbarView = SnackbarView()
+        snackbarView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        snackbarView.translatesAutoresizingMaskIntoConstraints = false
+        return snackbarView
+    }()
+    
     //MARK: - Init
     
     override init(frame: CGRect) {
@@ -134,13 +149,24 @@ final class ProductDetailView: UIView {
         stackView.addArrangedSubview(buttonStackView)
         stackView.addArrangedSubview(descriptionTitleLabel)
         stackView.addArrangedSubview(descriptionLabel)
-        addSubviews(spinner, imageView, stackView)
+        addSubviews(spinner, imageView, stackView, retryButton)
         spinner.startAnimating()
+        retryButton.setRetryAction(retryAction: retry)
         addConstrains()
     }
     
     required init?(coder: NSCoder) {
         fatalError("Unsupported")
+    }
+    
+    private func retry() {
+        retryButton.hide()
+        spinner.startAnimating()
+        viewModel?.fetchProductData()
+        if let imageUrl = viewModel?.imageURL {
+            loadImage(imageUrl: imageUrl)
+        }
+
     }
     
     private func addConstrains() {
@@ -166,6 +192,9 @@ final class ProductDetailView: UIView {
             addressLabel.widthAnchor.constraint(equalToConstant: 100),
             addressLabel.heightAnchor.constraint(equalToConstant: 100),
             
+            retryButton.centerXAnchor.constraint(equalTo: centerXAnchor),
+            retryButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            
             buttonStackView.heightAnchor.constraint(equalToConstant: 50),
         ])
     }
@@ -183,12 +212,18 @@ final class ProductDetailView: UIView {
     public func configure(with viewModel: ProductDetailViewViewModel) {
         viewModel.delegate = self
         self.viewModel = viewModel
-        imageView.kf.setImage(
-            with: viewModel.imageURL,
-            placeholder: placeholderImage
-        )
+        if let imageUrl = viewModel.imageURL {
+            loadImage(imageUrl: imageUrl)
+        }
         priceLabel.text = viewModel.price
         titleLabel.text = viewModel.title
+    }
+    
+    private func loadImage(imageUrl: URL) {
+        imageView.kf.setImage(
+            with: imageUrl,
+            placeholder: placeholderImage
+        )
     }
 }
 
@@ -204,5 +239,12 @@ extension ProductDetailView: ProductDetailsViewViewModelDelegate {
         addressLabel.alpha = 1
         descriptionTitleLabel.alpha = 1
         spinner.stopAnimating()
+        retryButton.hide()
+    }
+    
+    func errorHasBeenOccured(message: String) {
+        snackbarView.show(root: self, message: message)
+        spinner.stopAnimating()
+        retryButton.show()
     }
 }

@@ -30,78 +30,25 @@ final class ProductListView: UIView {
         return spinner
     }()
     
-    func showRetryButton(retryAction: @escaping () -> Void) {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor.black.withAlphaComponent(0.7)
-        button.setTitle("Retry", for: .normal)
-        addSubview(button)
-        
-        NSLayoutConstraint.activate([
-            button.centerXAnchor.constraint(equalTo: centerXAnchor),
-            button.centerYAnchor.constraint(equalTo: centerYAnchor)
-        ])
-        
-        button.addTarget(self, action: #selector(retry(_:)), for: .touchUpInside)
-        
-        // Store the retry action in the button's tag to access it in the selector
-        button.tag = 1
-        objc_setAssociatedObject(button, &retryActionKey, retryAction, .OBJC_ASSOCIATION_COPY_NONATOMIC)
-    }
-
-    @objc func retry(_ sender: UIButton) {
-        // Retrieve the stored retry action from the button's associated object
-        if let retryAction = objc_getAssociatedObject(sender, &retryActionKey) as? () -> Void {
-            retryAction()
-        }
-        
-        sender.removeFromSuperview()
-    }
-
-    private var retryActionKey: UInt8 = 0
+    private let retryButton: RetryButton = {
+        let retryButton = RetryButton()
+        retryButton.translatesAutoresizingMaskIntoConstraints = false
+        retryButton.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        return retryButton
+    }()
     
-    func showSnackbar(message: String) {
-            let snackbarView = UIView()
-            snackbarView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
-            snackbarView.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(snackbarView)
-            
-            let label = UILabel()
-            label.text = message
-            label.textColor = .white
-            label.translatesAutoresizingMaskIntoConstraints = false
-            snackbarView.addSubview(label)
-            
-            NSLayoutConstraint.activate([
-                snackbarView.leadingAnchor.constraint(equalTo: leadingAnchor),
-                snackbarView.trailingAnchor.constraint(equalTo: trailingAnchor),
-                snackbarView.bottomAnchor.constraint(equalTo: bottomAnchor),
-                snackbarView.heightAnchor.constraint(equalToConstant: 44), // Adjust the height as needed
-                
-                label.leadingAnchor.constraint(equalTo: snackbarView.leadingAnchor, constant: 16),
-                label.trailingAnchor.constraint(equalTo: snackbarView.trailingAnchor, constant: -16),
-                label.topAnchor.constraint(equalTo: snackbarView.topAnchor),
-                label.bottomAnchor.constraint(equalTo: snackbarView.bottomAnchor)
-            ])
-            
-        //появление
-            UIView.animate(withDuration: 0.3, animations: {
-                snackbarView.transform = CGAffineTransform(translationX: 0, y: -snackbarView.frame.height)
-            }) { _ in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    UIView.animate(withDuration: 0.3) {
-                        snackbarView.transform = .identity
-                    }
-                }
-            }
-        //исчезновение
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            UIView.animate(withDuration: 0.8, animations: {
-                snackbarView.alpha = 0.0
-            }) { _ in
-                snackbarView.removeFromSuperview()
-            }
-        }
+    private let snackbarView: SnackbarView = {
+        let snackbarView = SnackbarView()
+        snackbarView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        snackbarView.translatesAutoresizingMaskIntoConstraints = false
+        return snackbarView
+    }()
+    
+    private func retry() {
+        retryButton.hide()
+        spinner.startAnimating()
+        viewModel.fetchProducts()
+        
     }
     
     private let collectionView: UICollectionView = {
@@ -123,12 +70,13 @@ final class ProductListView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
-        addSubviews(spinner, collectionView)
+        addSubviews(spinner, retryButton, collectionView, snackbarView)
         addConstraints()
         spinner.startAnimating()
         viewModel.delegate = self
         setupCollectionView()
         viewModel.fetchProducts()
+        retryButton.setRetryAction(retryAction: retry)
     }
     
     required init?(coder: NSCoder) {
@@ -141,6 +89,9 @@ final class ProductListView: UIView {
             spinner.heightAnchor.constraint(equalToConstant: 100),
             spinner.centerXAnchor.constraint(equalTo: centerXAnchor),
             spinner.centerYAnchor.constraint(equalTo: centerYAnchor),
+            
+            retryButton.centerXAnchor.constraint(equalTo: centerXAnchor),
+            retryButton.centerYAnchor.constraint(equalTo: centerYAnchor),
             
             collectionView.topAnchor.constraint(equalTo: topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -157,11 +108,9 @@ final class ProductListView: UIView {
 
 extension ProductListView: ProductListViewViewModelDelegate {
     func errorHasBeenOccured(message: String) {
-        showSnackbar(message: message)
+        snackbarView.show(root: self, message: message)
         spinner.stopAnimating()
-        showRetryButton(retryAction: {
-            self.viewModel.fetchProducts()
-        })
+        retryButton.show()
     }
     
     func didSelectProduct(_ product: Product) {
@@ -171,6 +120,7 @@ extension ProductListView: ProductListViewViewModelDelegate {
     func didloadProducts() {
         spinner.stopAnimating()
         collectionView.isHidden = false
+        retryButton.hide()
         collectionView.reloadData()
         UIView.animate(withDuration: 0.4) {
             self.collectionView.alpha = 1

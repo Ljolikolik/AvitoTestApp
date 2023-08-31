@@ -49,7 +49,7 @@ final class ProductListViewViewModel: NSObject {
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    self?.delegate?.errorHasBeenOccured(message: "Unknown Error!")
+                    self?.delegate?.errorHasBeenOccured(message: "Произошла ошибка при запросе.")
                 }
                 print(String(describing: error))
             }
