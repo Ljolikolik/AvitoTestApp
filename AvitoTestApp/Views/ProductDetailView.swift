@@ -28,6 +28,7 @@ final class ProductDetailView: UIView {
         scrollView.showsVerticalScrollIndicator = true
         scrollView.alwaysBounceVertical = true
         scrollView.backgroundColor = .clear
+        scrollView.contentInset = .init(top: 0, left: 0, bottom: 200, right: 0)
         return scrollView
     }()
     
